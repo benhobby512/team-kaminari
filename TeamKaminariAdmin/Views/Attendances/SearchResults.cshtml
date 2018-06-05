@@ -1,0 +1,55 @@
+﻿@model TeamKaminariAdmin.Models.AttendanceViewModel
+
+@if (!Model.Customers.Any())
+{
+    <h3 class="text-error">No customers found.</h3>
+}
+else
+{
+    @Html.Hidden("attendance", Model)
+
+    using (Html.BeginForm("SignIn", "Attendances", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("sessionId", Url.RequestContext.RouteData.Values["id"])
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Add to Session</th>
+                    <th>@Html.DisplayNameFor(m => m.Customers.FirstOrDefault().Forename)</th>
+                    <th>@Html.DisplayNameFor(m => m.Customers.FirstOrDefault().Surname)</th>
+                    <th>@Html.DisplayNameFor(m => m.Customers.FirstOrDefault().EmailAddress)</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @for (var i = 0; i < Model.Customers.Count; i++)
+                {
+                    <tr>
+                        <td>@Html.CheckBoxFor(m => Model.Customers[i].CustomerSelected, new { @checked = "checked" })</td>
+                        <td>@Html.DisplayFor(m => Model.Customers[i].Forename)</td>
+                        <td>@Html.DisplayFor(m => Model.Customers[i].Surname)</td>
+                        <td>@Html.DisplayFor(m => Model.Customers[i].EmailAddress)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <td>
+            <div class="form-group">
+                <div>
+                    <input type="submit" value="Submit changes" class="btn btn-default" />
+                </div>
+            </div>
+        </td>
+
+        for (var i = 0; i < Model.Customers.Count; i++)
+        {
+            <tr>
+                <td>@Html.HiddenFor(m => Model.Customers[i].CustomerId)</td>
+                <td>@Html.HiddenFor(m => Model.Customers[i].CustomerSelected)</td>
+            </tr>
+        }
+    }
+}

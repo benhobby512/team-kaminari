@@ -1,0 +1,71 @@
+﻿@model IEnumerable<TeamKaminariAdmin.Models.Attendance>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Attendees</h2>
+
+<p>
+    @Html.ActionLink("Add new member", "Create", "Attendances", new { id = Url.RequestContext.RouteData.Values["id"] }, null)
+</p>
+
+@if (Model == null || !Model.Any())
+{
+    <p>No attendees signed in, add members @Html.ActionLink("here", "Create", "Attendances", new { id = Url.RequestContext.RouteData.Values["id"] }, null).</p>
+}
+else
+{
+    <table id="tableSorter" class="table tablesorter">
+        <thead>
+            Session Date: @Model.FirstOrDefault().Session.Date.ToShortDateString()
+            <br />
+            Session Number: @Model.FirstOrDefault().Session.SessionNo
+
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Customer.Forename)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Customer.Surname)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Customer.Tel1)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Customer.Tel2)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Customer.EmailAddress)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+                {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Customer.Forename)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Customer.Surname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Customer.Tel1)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Customer.Tel2)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Customer.EmailAddress)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Customer details", "Details", "Customers", new { id = item.CustomerId }, null) |
+                        @Html.ActionLink("Remove from session", "Delete", new { id = item.AttendanceId })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

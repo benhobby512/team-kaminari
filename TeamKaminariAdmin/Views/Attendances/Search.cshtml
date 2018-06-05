@@ -1,0 +1,14 @@
+﻿@using (Ajax.BeginForm("Search", "Attendances", FormMethod.Post,
+    new AjaxOptions
+    {
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "POST",
+        UpdateTargetId = "search-results"
+    }))
+{
+    <div>
+        @Html.TextBox("query", "", new { @class="form-control text-box multi-line"})
+        <input type="submit" value="Search" class="btn btn-default" />
+    </div>      
+
+}

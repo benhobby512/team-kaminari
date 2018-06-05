@@ -1,0 +1,106 @@
+﻿@using System.Web.UI.WebControls
+@model TeamKaminariAdmin.Models.ReportViewModel
+
+@{
+    ViewBag.Title = "Info";
+}
+
+<h2>Info</h2>
+
+@using (Html.BeginForm("Info", "Report", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <p>Search for customers in a given attendance date range.</p>
+    <div>
+        <dl class="dl-horizontal">
+            <dt>Start date:</dt>
+            <dd>@Html.TextBox("startDate", Model.StartDate.ToString("d"), new { @class = "form-control text-box multi-line datepicker" })</dd>
+            <dt>End date:</dt>
+            <dd>
+                @Html.TextBox("endDate", Model.EndDate.ToString("d"), new { @class = "form-control text-box multi-line datepicker" })
+                <input type="submit" value="Search" class="btn btn-default" />
+            </dd>
+        </dl>
+    </div>
+
+    @Html.ValidationSummary()
+}
+
+@if (Model?.Customers == null || !Model.Customers.Any())
+{
+    @ViewBag.NoModelMessage
+}
+else
+{
+    <table id="tableSorter" class="table tablesorter">
+        <thead>
+            Date range - @Model.StartDate.ToString("d") - @Model.EndDate.ToString("d")
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Customers.First().Forename)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Customers.First().Surname)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Customers.First().Tel1)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Customers.First().EmailAddress)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Customers.First().LicenseNo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Customers.First().LicenseResetDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Customers.First().LicensePaid)
+                </th>
+                <th>Sessions Attended</th>
+                <th>Current Belt</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Customers)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Forename)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Surname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Tel1)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EmailAddress)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LicenseNo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LicenseResetDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LicensePaid)
+                    </td>
+                    <td>@item.Attendances.Where(a => a.Session.Date >= Model.StartDate && a.Session.Date <= Model.EndDate).Sum(a => 1)</td>
+                    <td>@item.CustomerBelts.OrderByDescending(f => f.BeltId).FirstOrDefault(d => d.DateAchieved != null).Belt.BeltColour</td>
+                    <td>
+                        @Html.ActionLink("Details", "Details", "Customers", new { id = item.CustomerId }, null) |
+                        @Html.Hidden("customerId", item.CustomerId)
+                        @Html.ActionLink("Belts", "CustomerBelts", "Customers", new { customerId = item.CustomerId }, null)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<p>
+    @Html.ActionLink("Generate Customer Report", "GenerateReport", "Report")
+    <br />
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,455 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="TeamKaminariAdminModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Attendance">
+          <Key>
+            <PropertyRef Name="AttendanceId" />
+          </Key>
+          <Property Name="AttendanceId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CustomerId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="SessionId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Belts">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BeltColour" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CustomerBelts">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CustomerId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BeltId" Type="tinyint" Nullable="false" />
+          <Property Name="DateAchieved" Type="date" />
+        </EntityType>
+        <EntityType Name="Customers">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+          </Key>
+          <Property Name="CustomerId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Forename" Type="varchar" MaxLength="255" />
+          <Property Name="Surname" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Tel1" Type="varchar" MaxLength="20" />
+          <Property Name="Tel2" Type="varchar" MaxLength="20" />
+          <Property Name="EmailAddress" Type="varchar" MaxLength="400" />
+          <Property Name="MedicalInfo" Type="text" />
+          <Property Name="LicenseNo" Type="varchar" MaxLength="50" />
+          <Property Name="LiabilityWaiver" Type="bit" Nullable="false" />
+          <Property Name="PhotoRelease" Type="bit" Nullable="false" />
+          <Property Name="PayingMonthly" Type="bit" Nullable="false" />
+          <Property Name="LicensePaid" Type="bit" Nullable="false" />
+          <Property Name="LicenseResetDate" Type="datetime" />
+          <Property Name="EmergencyContactId" Type="uniqueidentifier" />
+          <Property Name="Street" Type="varchar" MaxLength="200" />
+          <Property Name="Town" Type="varchar" MaxLength="200" />
+          <Property Name="PostCode" Type="varchar" MaxLength="10" />
+          <Property Name="Dob" Type="smalldatetime" />
+        </EntityType>
+        <EntityType Name="EmergencyContacts">
+          <Key>
+            <PropertyRef Name="EmergencyContactId" />
+          </Key>
+          <Property Name="EmergencyContactId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CustomerId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Forename" Type="varchar" MaxLength="255" />
+          <Property Name="Surname" Type="varchar" MaxLength="255" />
+          <Property Name="Tel1" Type="varchar" MaxLength="20" />
+          <Property Name="Tel2" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Sessions">
+          <Key>
+            <PropertyRef Name="SessionId" />
+          </Key>
+          <Property Name="SessionId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="SessionNo" Type="int" />
+        </EntityType>
+        <Association Name="FK_Attendance_Customers">
+          <End Role="Customers" Type="Self.Customers" Multiplicity="1" />
+          <End Role="Attendance" Type="Self.Attendance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customers">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="Attendance">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Attendance_Sessions">
+          <End Role="Sessions" Type="Self.Sessions" Multiplicity="1" />
+          <End Role="Attendance" Type="Self.Attendance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sessions">
+              <PropertyRef Name="SessionId" />
+            </Principal>
+            <Dependent Role="Attendance">
+              <PropertyRef Name="SessionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerBelts_Belts">
+          <End Role="Belts" Type="Self.Belts" Multiplicity="1" />
+          <End Role="CustomerBelts" Type="Self.CustomerBelts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Belts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CustomerBelts">
+              <PropertyRef Name="BeltId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerBelts_Customers">
+          <End Role="Customers" Type="Self.Customers" Multiplicity="1" />
+          <End Role="CustomerBelts" Type="Self.CustomerBelts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customers">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="CustomerBelts">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmergencyContacts_Customers">
+          <End Role="Customers" Type="Self.Customers" Multiplicity="1" />
+          <End Role="EmergencyContacts" Type="Self.EmergencyContacts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customers">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="EmergencyContacts">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="SelectCustomers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="TeamKaminariAdminModelStoreContainer">
+          <EntitySet Name="Attendance" EntityType="Self.Attendance" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Belts" EntityType="Self.Belts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CustomerBelts" EntityType="Self.CustomerBelts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Customers" EntityType="Self.Customers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmergencyContacts" EntityType="Self.EmergencyContacts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sessions" EntityType="Self.Sessions" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Attendance_Customers" Association="Self.FK_Attendance_Customers">
+            <End Role="Customers" EntitySet="Customers" />
+            <End Role="Attendance" EntitySet="Attendance" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Attendance_Sessions" Association="Self.FK_Attendance_Sessions">
+            <End Role="Sessions" EntitySet="Sessions" />
+            <End Role="Attendance" EntitySet="Attendance" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerBelts_Belts" Association="Self.FK_CustomerBelts_Belts">
+            <End Role="Belts" EntitySet="Belts" />
+            <End Role="CustomerBelts" EntitySet="CustomerBelts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerBelts_Customers" Association="Self.FK_CustomerBelts_Customers">
+            <End Role="Customers" EntitySet="Customers" />
+            <End Role="CustomerBelts" EntitySet="CustomerBelts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmergencyContacts_Customers" Association="Self.FK_EmergencyContacts_Customers">
+            <End Role="Customers" EntitySet="Customers" />
+            <End Role="EmergencyContacts" EntitySet="EmergencyContacts" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TeamKaminariAdminModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="TeamKaminariAdminEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Attendances" EntityType="TeamKaminariAdminModel.Attendance" />
+          <EntitySet Name="Belts" EntityType="TeamKaminariAdminModel.Belt" />
+          <EntitySet Name="CustomerBelts" EntityType="TeamKaminariAdminModel.CustomerBelt" />
+          <EntitySet Name="Customers" EntityType="TeamKaminariAdminModel.Customer" />
+          <EntitySet Name="EmergencyContacts" EntityType="TeamKaminariAdminModel.EmergencyContact" />
+          <EntitySet Name="Sessions" EntityType="TeamKaminariAdminModel.Session" />
+          <AssociationSet Name="FK_Attendance_Customers" Association="TeamKaminariAdminModel.FK_Attendance_Customers">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="Attendance" EntitySet="Attendances" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Attendance_Sessions" Association="TeamKaminariAdminModel.FK_Attendance_Sessions">
+            <End Role="Session" EntitySet="Sessions" />
+            <End Role="Attendance" EntitySet="Attendances" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerBelts_Belts" Association="TeamKaminariAdminModel.FK_CustomerBelts_Belts">
+            <End Role="Belt" EntitySet="Belts" />
+            <End Role="CustomerBelt" EntitySet="CustomerBelts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerBelts_Customers" Association="TeamKaminariAdminModel.FK_CustomerBelts_Customers">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="CustomerBelt" EntitySet="CustomerBelts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmergencyContacts_Customers" Association="TeamKaminariAdminModel.FK_EmergencyContacts_Customers">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="EmergencyContact" EntitySet="EmergencyContacts" />
+          </AssociationSet>
+          <FunctionImport Name="SelectCustomers" ReturnType="Collection(TeamKaminariAdminModel.SelectCustomers_Result)" />
+        </EntityContainer>
+        <EntityType Name="Attendance">
+          <Key>
+            <PropertyRef Name="AttendanceId" />
+          </Key>
+          <Property Name="AttendanceId" Type="Guid" Nullable="false" />
+          <Property Name="CustomerId" Type="Guid" Nullable="false" />
+          <Property Name="SessionId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Customer" Relationship="TeamKaminariAdminModel.FK_Attendance_Customers" FromRole="Attendance" ToRole="Customer" />
+          <NavigationProperty Name="Session" Relationship="TeamKaminariAdminModel.FK_Attendance_Sessions" FromRole="Attendance" ToRole="Session" />
+        </EntityType>
+        <EntityType Name="Belt">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BeltColour" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="CustomerBelts" Relationship="TeamKaminariAdminModel.FK_CustomerBelts_Belts" FromRole="Belt" ToRole="CustomerBelt" />
+        </EntityType>
+        <EntityType Name="CustomerBelt">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="CustomerId" Type="Guid" Nullable="false" />
+          <Property Name="BeltId" Type="Byte" Nullable="false" />
+          <Property Name="DateAchieved" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="Belt" Relationship="TeamKaminariAdminModel.FK_CustomerBelts_Belts" FromRole="CustomerBelt" ToRole="Belt" />
+          <NavigationProperty Name="Customer" Relationship="TeamKaminariAdminModel.FK_CustomerBelts_Customers" FromRole="CustomerBelt" ToRole="Customer" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+          </Key>
+          <Property Name="CustomerId" Type="Guid" Nullable="false" />
+          <Property Name="Forename" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Surname" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Tel1" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Tel2" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="EmailAddress" Type="String" MaxLength="400" FixedLength="false" Unicode="false" />
+          <Property Name="MedicalInfo" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="LicenseNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LiabilityWaiver" Type="Boolean" Nullable="false" />
+          <Property Name="PhotoRelease" Type="Boolean" Nullable="false" />
+          <Property Name="PayingMonthly" Type="Boolean" Nullable="false" />
+          <Property Name="LicensePaid" Type="Boolean" Nullable="false" />
+          <Property Name="LicenseResetDate" Type="DateTime" Precision="3" />
+          <Property Name="EmergencyContactId" Type="Guid" />
+          <Property Name="Street" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Town" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PostCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Dob" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="Attendances" Relationship="TeamKaminariAdminModel.FK_Attendance_Customers" FromRole="Customer" ToRole="Attendance" />
+          <NavigationProperty Name="CustomerBelts" Relationship="TeamKaminariAdminModel.FK_CustomerBelts_Customers" FromRole="Customer" ToRole="CustomerBelt" />
+          <NavigationProperty Name="EmergencyContacts" Relationship="TeamKaminariAdminModel.FK_EmergencyContacts_Customers" FromRole="Customer" ToRole="EmergencyContact" />
+        </EntityType>
+        <EntityType Name="EmergencyContact">
+          <Key>
+            <PropertyRef Name="EmergencyContactId" />
+          </Key>
+          <Property Name="EmergencyContactId" Type="Guid" Nullable="false" />
+          <Property Name="CustomerId" Type="Guid" Nullable="false" />
+          <Property Name="Forename" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Surname" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Tel1" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Tel2" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Customer" Relationship="TeamKaminariAdminModel.FK_EmergencyContacts_Customers" FromRole="EmergencyContact" ToRole="Customer" />
+        </EntityType>
+        <EntityType Name="Session">
+          <Key>
+            <PropertyRef Name="SessionId" />
+          </Key>
+          <Property Name="SessionId" Type="Guid" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="SessionNo" Type="Int32" />
+          <NavigationProperty Name="Attendances" Relationship="TeamKaminariAdminModel.FK_Attendance_Sessions" FromRole="Session" ToRole="Attendance" />
+        </EntityType>
+        <Association Name="FK_Attendance_Customers">
+          <End Type="TeamKaminariAdminModel.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="TeamKaminariAdminModel.Attendance" Role="Attendance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="Attendance">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Attendance_Sessions">
+          <End Type="TeamKaminariAdminModel.Session" Role="Session" Multiplicity="1" />
+          <End Type="TeamKaminariAdminModel.Attendance" Role="Attendance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Session">
+              <PropertyRef Name="SessionId" />
+            </Principal>
+            <Dependent Role="Attendance">
+              <PropertyRef Name="SessionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerBelts_Belts">
+          <End Type="TeamKaminariAdminModel.Belt" Role="Belt" Multiplicity="1" />
+          <End Type="TeamKaminariAdminModel.CustomerBelt" Role="CustomerBelt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Belt">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CustomerBelt">
+              <PropertyRef Name="BeltId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerBelts_Customers">
+          <End Type="TeamKaminariAdminModel.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="TeamKaminariAdminModel.CustomerBelt" Role="CustomerBelt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="CustomerBelt">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmergencyContacts_Customers">
+          <End Type="TeamKaminariAdminModel.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="TeamKaminariAdminModel.EmergencyContact" Role="EmergencyContact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="EmergencyContact">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="SelectCustomers_Result">
+          <Property Type="String" Name="Surname" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="Forename" Nullable="true" MaxLength="255" />
+          <Property Type="DateTime" Name="Dob" Nullable="true" Precision="16" />
+          <Property Type="DateTime" Name="LicenseResetDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Street" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="Town" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="PostCode" Nullable="true" MaxLength="10" />
+        </ComplexType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TeamKaminariAdminModelStoreContainer" CdmEntityContainer="TeamKaminariAdminEntities">
+          <EntitySetMapping Name="Attendances">
+            <EntityTypeMapping TypeName="TeamKaminariAdminModel.Attendance">
+              <MappingFragment StoreEntitySet="Attendance">
+                <ScalarProperty Name="SessionId" ColumnName="SessionId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="AttendanceId" ColumnName="AttendanceId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Belts">
+            <EntityTypeMapping TypeName="TeamKaminariAdminModel.Belt">
+              <MappingFragment StoreEntitySet="Belts">
+                <ScalarProperty Name="BeltColour" ColumnName="BeltColour" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerBelts">
+            <EntityTypeMapping TypeName="TeamKaminariAdminModel.CustomerBelt">
+              <MappingFragment StoreEntitySet="CustomerBelts">
+                <ScalarProperty Name="DateAchieved" ColumnName="DateAchieved" />
+                <ScalarProperty Name="BeltId" ColumnName="BeltId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="TeamKaminariAdminModel.Customer">
+              <MappingFragment StoreEntitySet="Customers">
+                <ScalarProperty Name="Dob" ColumnName="Dob" />
+                <ScalarProperty Name="PostCode" ColumnName="PostCode" />
+                <ScalarProperty Name="Town" ColumnName="Town" />
+                <ScalarProperty Name="Street" ColumnName="Street" />
+                <ScalarProperty Name="EmergencyContactId" ColumnName="EmergencyContactId" />
+                <ScalarProperty Name="LicenseResetDate" ColumnName="LicenseResetDate" />
+                <ScalarProperty Name="LicensePaid" ColumnName="LicensePaid" />
+                <ScalarProperty Name="PayingMonthly" ColumnName="PayingMonthly" />
+                <ScalarProperty Name="PhotoRelease" ColumnName="PhotoRelease" />
+                <ScalarProperty Name="LiabilityWaiver" ColumnName="LiabilityWaiver" />
+                <ScalarProperty Name="LicenseNo" ColumnName="LicenseNo" />
+                <ScalarProperty Name="MedicalInfo" ColumnName="MedicalInfo" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="Tel2" ColumnName="Tel2" />
+                <ScalarProperty Name="Tel1" ColumnName="Tel1" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Forename" ColumnName="Forename" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmergencyContacts">
+            <EntityTypeMapping TypeName="TeamKaminariAdminModel.EmergencyContact">
+              <MappingFragment StoreEntitySet="EmergencyContacts">
+                <ScalarProperty Name="Tel2" ColumnName="Tel2" />
+                <ScalarProperty Name="Tel1" ColumnName="Tel1" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Forename" ColumnName="Forename" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="EmergencyContactId" ColumnName="EmergencyContactId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sessions">
+            <EntityTypeMapping TypeName="TeamKaminariAdminModel.Session">
+              <MappingFragment StoreEntitySet="Sessions">
+                <ScalarProperty Name="SessionNo" ColumnName="SessionNo" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="SessionId" ColumnName="SessionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SelectCustomers" FunctionName="TeamKaminariAdminModel.Store.SelectCustomers">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TeamKaminariAdminModel.SelectCustomers_Result">
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Forename" ColumnName="Forename" />
+                <ScalarProperty Name="Dob" ColumnName="Dob" />
+                <ScalarProperty Name="LicenseResetDate" ColumnName="LicenseResetDate" />
+                <ScalarProperty Name="Street" ColumnName="Street" />
+                <ScalarProperty Name="Town" ColumnName="Town" />
+                <ScalarProperty Name="PostCode" ColumnName="PostCode" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

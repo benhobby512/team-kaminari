@@ -1,0 +1,56 @@
+﻿@model TeamKaminariAdmin.Models.CustomerBeltViewModel
+
+<h2>Belts Achieved</h2>
+
+<p>
+    @Html.ActionLink("Return to customers", "Index", "Customers")
+</p>
+
+@if (Model?.Belts != null && Model.Belts.Any())
+{
+    @Html.Hidden("cb", Model)
+    
+    using (Html.BeginForm("BeltAcheived", "Customers", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken();
+        @Html.HiddenFor(m => m.CustomerId)
+        
+        <table class="table">
+            <tr>
+                <th>
+                    Belt Colour
+                </th>
+                <th>
+                    Date Achieved
+                </th>
+                <th>
+                    Belt Achieved
+                </th>
+            </tr>
+            
+            @for (int i = 0; i < Model.Belts.Count(); i++)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(m => Model.Belts[i].BeltColour)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => m.CustomerBelts.FirstOrDefault(cb => cb.BeltId == Model.Belts[i].Id).DateAchieved)
+                    </td>
+                    <td>
+                        @Html.CheckBoxFor(m => Model.Belts[i].BeltAchieved, new { @checked = "checked" })
+                    </td>
+                </tr>
+            }
+        </table>
+
+        <input type="submit" value="Apply changes" id="@Model.CustomerBelts.FirstOrDefault().CustomerId" name="id" class="btn btn-default"/>
+        
+        for (int i = 0; i < Model.Belts.Count(); i++)
+        {
+            @Html.HiddenFor(m => Model.Belts[i].BeltAchieved)
+            @Html.HiddenFor(m => Model.Belts[i].CustomerBelts)
+            @Html.HiddenFor(m => Model.Belts[i].Id)
+        }
+    }
+}

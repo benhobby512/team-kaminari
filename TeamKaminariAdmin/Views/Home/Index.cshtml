@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>Kaminari Kickboxing</h1>
+    <h2>Administration Console</h2>
+
+    @if (!Request.IsAuthenticated)
+    {
+        @Html.ActionLink("Log in", "Login", "Account", new { }, new { @class = "btn btn-primary btn-lg" })
+    }
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Attendance</h2>
+        <p>
+            Create new sessions, log members in and out of those sessions. Search for existing sessions and see attendees.
+        </p>
+        @Html.ActionLink("Attendance","Index","Sessions")
+    </div>
+    <div class="col-md-4">
+        <h2>Customer Information</h2>
+        <p>View, add, edit and remove customers. Searchable by surname.</p>
+        <p>@Html.ActionLink("Customers", "Index", "Customers")</p>
+    </div>
+    <div class="col-md-4">
+        <h2>Reporting</h2>
+        <p>Currently displays a sortable list of customers with attendance figures searchable by date range.</p>
+        <p>@Html.ActionLink("Report", "Info", "Report")</p>
+    </div>
+</div>

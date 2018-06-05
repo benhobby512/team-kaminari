@@ -1,0 +1,52 @@
+﻿@model IEnumerable<TeamKaminariAdmin.Models.Session>
+
+<h2>Sessions</h2>
+
+@using (Html.BeginForm("Index","Sessions", FormMethod.Post))
+{ 
+    @Html.ValidationSummary()
+    <p>Search for sessions by date.</p>
+    <div>
+        @Html.TextBox("query", "", new { @class = "form-control text-box multi-line datepicker" })
+        <input type="submit" value="Search" class="btn btn-default" />
+    </div> 
+}
+
+<br/>
+
+@if (Model == null || !Model.Any())
+{
+    <p>No sessions found, create one @Html.ActionLink("here", "Create").</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        @Html.ActionLink("Create new session", "Create")
+        </thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SessionNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+        </tr>
+
+        @foreach (var item in Model.OrderByDescending(m => m.Date).ThenByDescending(m => m.SessionNo))
+        {
+            <tr>
+                <td>@Html.DisplayFor(m => item.SessionNo)</td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.ActionLink("Add member", "Create", "Attendances", new {id = item.SessionId}, null) |
+                    @Html.ActionLink("View attendees", "Index", "Attendances", new {id = item.SessionId}, null) |
+                    @Html.ActionLink("Edit session", "Edit", new {id = item.SessionId}) |
+                    @Html.ActionLink("Remove session", "Delete", new {id = item.SessionId})
+                </td>
+            </tr>
+        }
+    </table>
+}

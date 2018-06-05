@@ -1,0 +1,27 @@
+﻿@model TeamKaminariAdmin.Models.Attendance
+
+<h2>Customer Sign In</h2>
+
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(m => m.SessionId)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CustomerId, "Search Customer", new { @class = "control-label col-md-2", style="width:auto;" })
+        <div class="col-md-10">
+            @Html.Action("Search", "Attendances", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.CustomerId, "", new { @class = "text-danger" })
+            <br/>
+            @ViewBag.SignedIn
+        </div>
+        <br />
+    </div>
+</div>
+
+<div id="search-form"></div>
+<div id="search-results"></div>
+
+<div>
+    @Html.ActionLink("Back to sessions", "Index", "Sessions")
+</div>
